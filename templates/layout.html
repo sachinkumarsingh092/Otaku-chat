@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="../static/style.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        {% block head %}{% endblock %}
+        <title> Flack: {% block title %}{% endblock %}</title>
+    </head>
+    <body>
+         <!-- navbar -->
+        <nav class="navbar navbar-expand-sm bg-light navbar-light bg-light border">
+            <div class="collapse navbar-collapse" id="navbar">
+                {% if session.logged_in %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><img src="../static/img/linkin-park-logo.png" width="50" height="50"></li>
+                        <li class="nav-item"><a class="nav-link" style="color:red">@{{ session['username'] }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    </ul>
+                    <!-- Use ml-auto to align nav items right and mr-auto to align navitems to left -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a id="newChannel"class="nav-link" href="/">+Channel</a></li>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <button type="button" style="color: rgb(128, 128, 128); padding-top: 7%;" class="btn dropdown-toggle" data-toggle="dropdown">
+                                    Channels
+                                </button>
+                            <div class="dropdown-menu">
+                                {% for channel in channels %}
+                                    <a class="dropdown-item" href="/channels/{{ channel }} ">{{ channel }}</a>
+                                {% endfor %}
+                            </div>
+                        </div> 
+                    </li>
+                    </ul>
+                    {% else %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><img src="/static/img/linkin-park-logo.png" width="50" height="50"></li>
+                    </ul>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </nav> 
+
+        {% if get_flashed_messages() %} 
+            <header>
+                <div class="alert alert-primary border text-center" role="alert">
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+
+        <main class="container p-5">    
+            {% block main %}{% endblock %}
+        </main>
+        
+    </body>
+</html>
