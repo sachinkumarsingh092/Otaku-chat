@@ -65,11 +65,12 @@ def login():
 
 
 @app.route("/logout", methods=["GET"])
+@login_required
 def logout():
     """ Removes user from the session stack """
 
     # To clear all user info if he/she logs out use below line. #
-    # session.clear()
+    session.clear()
 
     # If user is logged out
     session['logged_in'] = False
@@ -104,7 +105,7 @@ def create():
 
 
 
-@app.route("/channels/<string:channel>", methods=["GET", "POST"])
+@app.route("/channels/<string:channel>", methods=["POST", "GET"])
 @login_required
 def enter_channel(channel):
     
@@ -119,7 +120,7 @@ def enter_channel(channel):
 
 
 
-@socketio.on('join')
+@socketio.on('joined')
 def join():
     """ Sends a joining message from client-side. """
 
@@ -128,11 +129,15 @@ def join():
 
     room = session.get('current_channel')
     join_room(room)
-    emit('status', 
-        {'user':session['username'],
-        'channel':room,
-        'msg':session['usernsname']+"joined:)"},
-        room=room)
+    emit(
+        'status', 
+        {
+            'user':session['username'],
+            'channel':room,
+            'msg':session['username']+" joined:)\n"
+        },
+        room=room
+    )
 
 
 
@@ -145,11 +150,13 @@ def left():
 
     room = session.get('current_channel')
     leave_room(room)
-    emit('status', 
-        {'user':session['username'],
-        'channel':room,
-        'msg':session['usernsname']+"left:("},
-        room=room)
+    emit(
+        'status', 
+        {
+            'msg': session['username']+" left:(\n"
+        },
+        room=room
+    )
 
 
 
@@ -158,13 +165,22 @@ def send_msg(msg, timestamp):
     """ Message with the timestamp. """
     room = session.get('current_channel')
 
+    # limit messages to 100 per room 
+    if len(messages[room]) > 100:
+        messages[room].popleft()
+
+    # add info in the current room
     messages[room].append([timestamp, session.get('username'), msg])
 
-    emit('announce', {
-        'user':session.get('username'),
-        'timestamp':timestamp,
-        'msg':msg},
-        room=room)
+    emit(
+        'announce message', 
+        {
+            'user':session.get('username'),
+            'timestamp':timestamp,
+            'msg':msg
+        },
+        room=room
+    )
 
 
 if __name__ == "__main__":

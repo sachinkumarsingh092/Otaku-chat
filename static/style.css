@@ -62,3 +62,22 @@ main img
 .logout { float:right; }
   
 .msgln { margin:0 0 2px 0; }
+
+
+
+/* Messages in chat box */
+.post {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    border-color: #ccc;
+  }
+
+/* Style time text */
+.time {
+    float: left;
+    color: #999;
+  }
+  

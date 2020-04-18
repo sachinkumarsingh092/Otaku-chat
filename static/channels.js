@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     // logger/debugger
     socket.on('log', data =>{
-        console.log(`${data.msg}`);
+        console.log(data.msg);
     });
 
     // When connected
@@ -42,13 +42,14 @@ document.addEventListener('DOMContentLoaded', () =>{
         // send:) button emits a message when pressed
         document.querySelector('#sendmsg').addEventListener('click', () =>{
 
-            let timestamp = new Date;
+            // time-stamp object
+            let timestamp = new Date();
 
             timestamp=timestamp.toLocaleTimeString();
             
             let msg = document.getElementById("usermsg").value;
 
-            socket.emit('message', msg, timestamp);
+            socket.emit('send message', msg, timestamp);
 
             // clear text box
             document.getElementById("usermsg").value = '';
@@ -57,14 +58,53 @@ document.addEventListener('DOMContentLoaded', () =>{
     });
 
     socket.on('status', data =>{
-        let announce = "==" + `${data.msg}` + "==";
-        document.querySelector('#chatbox').value += announce+'\n';
+        // message when user enters the room 
+        let msg = `${data.msg}`;
+        document.querySelector('#chatbox').append(msg);
 
         localStorage.setItem('last_channel', data.channel);
     });
 
-    socket.on('announce', data =>{
-        let msg = `${data.timestamp}` + " => " + `${data.user}` + ": " + `${data.msg}`;
-        document.querySelector("#chatbox").value += msg+'\n';
+    socket.on('announce message', data =>{
+
+        // message user posts in the chat-room
+        let msg = `@${data.user} => ${data.msg}\n`;
+
+
+        // Create new post.
+        const post = document.createElement('div');
+        post.className = 'post';
+        post.style.color = 'rgb(51, 102, 255)'
+        post.innerHTML = msg;
+
+        // Time in post
+        const time = document.createElement('span');
+        time.className = 'time';
+        time.innerHTML = data.timestamp
+        time.style.color = 'rgb(153, 51, 255)'
+        post.append(time);
+
+        // Add button to hide post.
+        const hide = document.createElement('button');
+        hide.className = 'btn btn-outline-dark btn-sm float-right ';
+        hide.innerHTML = 'Hide';
+        post.append(hide);
+
+    
+    
+        // When hide button is clicked, remove post.
+        hide.onclick = function() {
+            this.parentElement.remove();
+        };
+
+        
+        // Add post to DOM.
+        document.querySelector("#chatbox").append(post);
+
+        // https://stackoverflow.com/a/29585990
+        document.getElementById('chatbox').lastChild.scrollIntoView(false);
+      
+            
+
     });
 });
