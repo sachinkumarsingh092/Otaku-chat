@@ -1,18 +1,15 @@
 import os
-
 from collections import deque
+from helpers import login_required
 
 from flask import Flask, url_for, render_template, session, request, flash, redirect
 from flask_socketio import SocketIO, emit, join_room, leave_room
 
-from helpers import login_required
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or b'_5#y2L"F4Q8z\n\xec]/'
 socketio = SocketIO(app)
 
-
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 # Total number of channels
 allChannels = []
@@ -21,13 +18,11 @@ allChannels = []
 messages = dict()
 
 
-
 @app.route("/")
 @login_required
 def index():
     """ chatroom """
     return render_template("index.html", channels = allChannels)
-
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -50,11 +45,10 @@ def login():
         except Exception:
             return render_template("error.html", error="User not found. Please register")
 
-
         # Display message #
         flash('Welcome', 'info')
 
-        session.permanent = True
+        # session.permanent = True
         
         return redirect('/')
 
@@ -65,11 +59,12 @@ def login():
 
 
 @app.route("/logout", methods=["GET"])
+@login_required
 def logout():
     """ Removes user from the session stack """
 
     # To clear all user info if he/she logs out use below line. #
-    # session.clear()
+    session.clear()
 
     # If user is logged out
     session['logged_in'] = False
@@ -83,9 +78,11 @@ def logout():
 def create():
     """ Create channel and redirect user to it. """
 
-    newChannel = request.form.get('channel')
+    global messages
 
     if request.method == 'POST':
+
+        newChannel = request.form.get('channel')
 
         # check for uniqueness of the channel created
         if newChannel in allChannels:
@@ -107,6 +104,7 @@ def create():
 @app.route("/channels/<string:channel>", methods=["GET", "POST"])
 @login_required
 def enter_channel(channel):
+    global messages
     
     # open the session for the current channel
     session['current_channel'] = channel
@@ -128,12 +126,15 @@ def join():
 
     room = session.get('current_channel')
     join_room(room)
-    emit('status', 
-        {'user':session['username'],
-        'channel':room,
-        'msg':session['usernsname']+"joined:)"},
-        room=room)
-
+    emit(
+        'status', 
+        {
+            'user': session['username'],
+            'channel': room,
+            'msg': session['username'] + " joined :)"
+        },
+        room=room
+    )
 
 
 @socketio.on('left')
@@ -145,26 +146,35 @@ def left():
 
     room = session.get('current_channel')
     leave_room(room)
-    emit('status', 
-        {'user':session['username'],
-        'channel':room,
-        'msg':session['usernsname']+"left:("},
-        room=room)
+    emit(
+        'status', 
+        {
+            'user': session['username'],
+            'channel': room,
+            'msg': session['username'] + "left:("
+        },
+        room=room
+    )
 
 
 
-@socketio.on('send message')
+@socketio.on('send_message')
 def send_msg(msg, timestamp):
+    global messages
     """ Message with the timestamp. """
     room = session.get('current_channel')
 
     messages[room].append([timestamp, session.get('username'), msg])
 
-    emit('announce', {
-        'user':session.get('username'),
-        'timestamp':timestamp,
-        'msg':msg},
-        room=room)
+    emit(
+        'announce', 
+        {
+            'user' : session.get('username'),
+            'timestamp': timestamp,
+            'msg': msg
+        }, 
+        room=room
+    )
 
 
 if __name__ == "__main__":

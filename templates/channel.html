@@ -19,17 +19,17 @@
         
         <div class="container-channel custom-window">
             <div id="chat" class="list-group">
-                <textarea id="chatbox" readonly>
-                    {%- if messages -%}
-                        {%- for msg in messages -%}
+                <textarea id="chatbox" >
+                    {% if messages %}
+                        {% for msg in messages %}
                             {{ msg[0] }} => {{ msg[1] }}: {{ msg[2] }}{{ '\n' }}
-                        {%- endfor -%}
-                    {%- endif -%}
+                        {% endfor %}
+                    {% endif %}
                 </textarea>
             </div>
             <div id="message-box">
                 <input type="text" id="usermsg" autofocus autocapitalize="on" autocomplete="off">
-                <button id="sendmsg" class="btn btn-primary" type="reset">SEND&#x1F642</button>
+                <button id="sendmsg" class="btn btn-primary">SEND&#x1F642</button>
             </div>
         </div>  
     </div>
