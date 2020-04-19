@@ -1,4 +1,4 @@
-# Project 2
+# Flask-chat-app
 
 This is a realtime chating webapp similar to slack, allowing users to create and join channels.
 
