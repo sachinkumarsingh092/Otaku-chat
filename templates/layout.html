@@ -12,7 +12,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
         {% block head %}{% endblock %}
-        <title> Flack: {% block title %}{% endblock %}</title>
+        <title> IPU-chat: {% block title %}{% endblock %}</title>
     </head>
     <body>
          <!-- navbar -->
@@ -20,7 +20,7 @@
             <div class="collapse navbar-collapse" id="navbar">
                 {% if session.logged_in %}
                     <ul class="navbar-nav">
-                        <li class="nav-item"><img src="../static/img/linkin-park-logo.png" width="50" height="50"></li>
+                        <li class="nav-item"><img src="../static/img/GGSIU_logo.png" width="50" height="50"></li>
                         <li class="nav-item"><a class="nav-link" style="color:red">@{{ session['username'] }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
                     </ul>
