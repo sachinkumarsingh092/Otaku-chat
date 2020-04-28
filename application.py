@@ -42,7 +42,6 @@ def login():
 
         # Add user information is client-side session #
         session['username'] = request.form['username'].strip()
-        session['logged_in'] = True
 
         # Authenticate user in session #
         try:
@@ -82,9 +81,6 @@ def logout():
         pass
 
     session.clear()
-
-    # If user is logged out
-    session['logged_in'] = False
 
     return redirect("/login")
 
