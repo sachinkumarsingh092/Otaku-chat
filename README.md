@@ -3,7 +3,7 @@
 This is a realtime chating webapp similar to slack, allowing users to create and join channels. 
 (Whole lot of subjects can be discussed but I prefer anime discussions:)).
 
-`Localstorage` is used insted of a database to store `sessions`. This is not a secure way, but really good for storing previous sessions and messages for quick rendering of pages i.e when you close your tab ot browser and revisit again, the last channel is opened by default.
+`Localstorage` is used insted of a database to store `sessions`. This is not a secure way, but really good for storing previous sessions and messages for quick rendering of pages i.e when you close your tab ot browser and revisit again, the last channel remains opened.
 
 `/static` contains the *javascript*, *css* and `/img` files.
 
