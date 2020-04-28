@@ -23,7 +23,6 @@ messages = dict()
 # User logged in
 users = []
 
-session['logged_in'] = False
 
 @app.route("/")
 @login_required
