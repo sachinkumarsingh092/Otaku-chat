@@ -20,7 +20,8 @@ allChannels = []
 # Messages in the channels
 messages = dict()
 
-
+# User logged in
+users = []
 
 @app.route("/")
 @login_required
@@ -50,6 +51,11 @@ def login():
         except Exception:
             return render_template("error.html", error="User not found. Please register")
 
+        # Check for unique users logged in. #
+        if session['username'] in users:
+            return render_template("error.html", error="User Exists!")
+
+        users.append(session['username'])
 
         # Display message #
         flash('Welcome', 'info')
@@ -70,6 +76,11 @@ def logout():
     """ Removes user from the session stack """
 
     # To clear all user info if he/she logs out use below line. #
+    try:
+        users.remove(session['username'])
+    except ValueError:
+        pass
+
     session.clear()
 
     # If user is logged out

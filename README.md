@@ -1,4 +1,4 @@
-# Flask-chat-app
+# Otaku
 
 This is a realtime chating webapp similar to slack, allowing users to create and join channels.
 
@@ -10,7 +10,9 @@ This is a realtime chating webapp similar to slack, allowing users to create and
 
 `application.py` is the main application.
 
-Addition feature to delete one's own messages is implemeted.
+`helpers.py` has the **login_required** decorator, to falicitate only logged users to be directed to certain pages.
+
+Feature to delete one's own messages is implemeted.
 
 ## Usage
 
@@ -19,3 +21,4 @@ Addition feature to delete one's own messages is implemeted.
 - Join or make a new channel.
 - Chat with other users.
 
+## Screenshots
