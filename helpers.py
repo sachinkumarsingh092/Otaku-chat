@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session, url_for, g
+from flask import redirect, render_template, request, session
 from functools import wraps
 
 def login_required(f):
@@ -8,7 +8,7 @@ def login_required(f):
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if g.user is None:
-            return redirect(url_for('login', next=request.url))
+        if session.get("logged_in") is False:
+            return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function

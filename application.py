@@ -23,6 +23,8 @@ messages = dict()
 # User logged in
 users = []
 
+session['logged_in'] = False
+
 @app.route("/")
 @login_required
 def index():
@@ -42,6 +44,7 @@ def login():
 
         # Add user information is client-side session #
         session['username'] = request.form['username'].strip()
+        session['logged_in'] = True
 
         # Authenticate user in session #
         try:
@@ -75,12 +78,10 @@ def logout():
     """ Removes user from the session stack """
 
     # To clear all user info if he/she logs out use below line. #
-    try:
-        users.remove(session['username'])
-    except ValueError:
-        pass
-
     session.clear()
+
+    # If user is logged out
+    session['logged_in'] = False
 
     return redirect("/login")
 
