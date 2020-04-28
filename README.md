@@ -16,7 +16,7 @@ Feature to delete one's own messages is implemeted.
 
 ## Usage
 
-- Go to the [site](https://ipu-chat.herokuapp.com/).
+- Go to the [site](https://otaku-chat.herokuapp.com/).
 - Enter a username.
 - Join or make a new channel.
 - Chat with other users.
